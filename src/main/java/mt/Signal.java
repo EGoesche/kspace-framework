@@ -42,6 +42,30 @@ public class Signal {
         DisplayUtils.showArray(this.buffer, this.name, /*start index=*/0, /*distance between values=*/1);
     }
 
+    // Adds the signal with another one elementwise
+    // Checks if both signals have the same size otherwise throws an error
+    public Signal plus(Signal other) {
+        if (this.size() != other.size()) {
+            throw new ArithmeticException("Signal have not the same size");
+        }
+        float newbuffer[] = new float[this.size()];
+        for (int i = 0; i < this.size(); i++) {
+            newbuffer[i] = this.buffer()[i] + other.buffer()[i];
+        }
+
+        return new Signal(newbuffer, this.name() + " + " + other.name());
+    }
+
+    // Multiplies the signal with a scalar
+    public Signal times(float scalar) {
+        float newbuffer[] = new float[this.size()];
+        for (int i = 0; i < this.size(); i++) {
+            newbuffer[i] = this.buffer()[i] * scalar;
+        }
+
+        return new Signal(newbuffer, this.name() + " * " + scalar);
+    }
+
     public static void main(String[] args) {
         float numbers[] = {42, 25, 17, 63, 90};
         Signal s1 = new Signal(numbers, "Signal 1");
