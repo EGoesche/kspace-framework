@@ -22,10 +22,10 @@ public class Exercise01 {
 		// cos.show();
 		// sin.show();
 
-		var sigsaw = new mt.SineWave(100, 1)
-				.plus(new mt.SineWave(100, 2))
-				.plus(new mt.SineWave(100, 3))
-				.plus(new mt.SineWave(100, 4))
+		var sigsaw = new mt.SineWave(100, 1).times(1.0f/2.0f)
+				.plus(new mt.SineWave(100, 3)).times(2.0f/3.0f)
+				.plus(new mt.SineWave(100, 5)).times(2.0f/5.0f)
+				.plus(new mt.SineWave(100, 7)).times(2.0f/7.0f)
 				;
 		sigsaw.show();
 
