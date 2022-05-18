@@ -12,12 +12,24 @@ public class Exercise01 {
 	public static void main(String[] args) {
 		(new ij.ImageJ()).exitWhenQuitting(true);
 
-		var cos = new mt.CosineWave(1, 1024);
-		var sin = new mt.SineWave(1, 1024);
+		// float f[] = {10.10f,30.3f,40.60f,77.50f};
 
-		cos.show();
-		sin.show();
+		// var signal = new mt.Signal(f, "Signal");
+		// var cos = new mt.CosineWave(100, 1);
+		// var sin = new mt.SineWave(100, 3);
 
+		// signal.show();
+		// cos.show();
+		// sin.show();
+
+		var sigsaw = new mt.SineWave(100, 1)
+				.plus(new mt.SineWave(100, 2))
+				.plus(new mt.SineWave(100, 3))
+				.plus(new mt.SineWave(100, 4))
+				;
+		sigsaw.show();
+
+		/*
 		var numWaves = 3;
 		//TODO try to understand the code and play around with it! 
 
@@ -33,6 +45,8 @@ public class Exercise01 {
 			;
 
 		coolWave.show();
+
+		 */
 
 	}
 }
