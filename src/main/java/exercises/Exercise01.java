@@ -1,4 +1,5 @@
-
+// Erik Goesche ge76imih
+// Mohammed Sabiya Sujith Ahamed cu01zaze
 /*
  * Exercise01.java
  * Copyright (C) 2020 Stephan Seitz <stephan.seitz@fau.de>
