@@ -3,11 +3,11 @@
 package mt;
 
 import lme.DisplayUtils;
-import ij.gui.Plot;
 
 public class Signal {
-    protected float[] buffer; // Array to store signal values
-    protected String name;    // Name of the signal
+    protected float[] buffer;   // Array to store signal values
+    protected String name;  // Name of the signal
+    protected int minIndex; //Index of first array element (should be 0 for signals)
 
     // Create signal with a certain length (set values later)
     public Signal(int length, String name) {
@@ -41,13 +41,13 @@ public class Signal {
         DisplayUtils.showArray(this.buffer, this.name, /*start index=*/0, /*distance between values=*/1);
     }
 
-    // Adds the signal with another one elementwise
+    // Adds the signal with another one element-wise
     // Checks if both signals have the same size otherwise throws an error
     public Signal plus(Signal other) {
         if (this.size() != other.size()) {
             throw new ArithmeticException("Signal have not the same size");
         }
-        float newbuffer[] = new float[this.size()];
+        float[] newbuffer = new float[this.size()];
         for (int i = 0; i < this.size(); i++) {
             newbuffer[i] = this.buffer()[i] + other.buffer()[i];
         }
@@ -57,12 +57,36 @@ public class Signal {
 
     // Multiplies the signal with a scalar
     public Signal times(float scalar) {
-        float newbuffer[] = new float[this.size()];
+        float[] newbuffer = new float[this.size()];
         for (int i = 0; i < this.size(); i++) {
             newbuffer[i] = this.buffer()[i] * scalar;
         }
 
         return new Signal(newbuffer, this.name() + " * " + scalar);
+    }
+
+    // Get the lowest index of signal (that is stored in buffer)
+    public int minIndex() {
+        return this.minIndex;
+    }
+
+    // Get the highest index of signal (that is stored in buffer)
+    public int maxIndex() {
+        return this.buffer.length - 1;
+    }
+
+    // Get signal at index i
+    public float atIndex(int i) {
+        try {
+            return this.buffer[i - this.minIndex];
+        } catch (ArrayIndexOutOfBoundsException e) {
+            return 0.0f;
+        }
+    }
+
+    // Set signal at index i
+    public void setAtIndex(int i, float value) {
+        this.buffer[i] = value;
     }
 
     public static void main(String[] args) {
