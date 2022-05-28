@@ -1,8 +1,9 @@
 // Erik Goesche ge76imih
-// Mohammed Sabiya Sujith Ahamed cu01zaze
 package mt;
 
 import lme.DisplayUtils;
+
+import static java.lang.Math.abs;
 
 public class Signal {
     protected float[] buffer;   // Array to store signal values
@@ -72,13 +73,13 @@ public class Signal {
 
     // Get the highest index of signal (that is stored in buffer)
     public int maxIndex() {
-        return this.buffer.length - 1;
+        return this.minIndex + this.buffer.length - 1;
     }
 
     // Get signal at index i
     public float atIndex(int i) {
         try {
-            return this.buffer[i - this.minIndex];
+            return this.buffer[i + abs(this.minIndex)];
         } catch (ArrayIndexOutOfBoundsException e) {
             return 0.0f;
         }
@@ -86,7 +87,7 @@ public class Signal {
 
     // Set signal at index i
     public void setAtIndex(int i, float value) {
-        this.buffer[i] = value;
+        this.buffer[i + abs(this.minIndex)] = value;
     }
 
     public static void main(String[] args) {
