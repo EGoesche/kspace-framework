@@ -1,6 +1,5 @@
+// Erik Goesche ge76imih
 package mt;
-
-import static java.lang.Math.abs;
 
 public class LinearFilter extends Signal {
     public LinearFilter(float[] coefficients, String name) {
