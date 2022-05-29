@@ -16,7 +16,7 @@ import ij.process.FloatProcessor;
 import ij.process.ImageConverter;
 import ij.plugin.FFT;
 import ij.process.ImageProcessor;
-//import mt.Image;
+import mt.Image;
 import net.imglib2.Cursor;
 import net.imglib2.IterableInterval;
 import net.imglib2.RandomAccessibleInterval;
@@ -71,9 +71,88 @@ public class DisplayUtils {
         plot.show();
     }
 
+    public static void showImage(float[] buffer, String title, int width) {
+        showImage(buffer, title, width, new float[]{0, 0}, 1.0, false);
+    }
 
+    public static void showImage(float[] buffer, String title, long width, float[] origin, double spacing, boolean replaceWindowWithSameName) {
+        FloatProcessor processor = new FloatProcessor((int) width, buffer.length / (int) width, buffer);
+        ImagePlus plus = new ImagePlus();
+        if (replaceWindowWithSameName && ij.WindowManager.getImage(title) != null) {
+            plus = ij.WindowManager.getImage(title);
+        }
+        plus.setProcessor(title, processor);
 
+        Calibration calibration = new Calibration();
+        calibration.setUnit("mm");
+        calibration.xOrigin = origin[0];
+        calibration.yOrigin = origin[1];
+        calibration.pixelHeight = spacing;
+        calibration.pixelWidth = spacing;
 
+        plus.setCalibration(calibration);
+        plus.show();
+        ij.IJ.run("Tile");
+    }
+
+    public  static void FFT(float[] buffer, String title, long width, float[] origin, double spacing){
+        FloatProcessor processor = new FloatProcessor((int) width, buffer.length / (int) width, buffer);
+        ImagePlus plus = new ImagePlus();
+        plus.setProcessor(title, processor);
+
+        Calibration calibration = new Calibration();
+        calibration.setUnit("mm");
+        calibration.xOrigin = origin[0];
+        calibration.yOrigin = origin[1];
+        calibration.pixelHeight = spacing;
+        calibration.pixelWidth = spacing;
+        plus.setCalibration(calibration);
+
+        FFT transform = new FFT();
+        ImagePlus fft = transform.forward(plus);
+
+        fft.show();
+        ij.IJ.run("Tile");
+
+    }
+
+    public static mt.Image plusToImage(ImagePlus plus, String title) {
+        ImageConverter converter = new ImageConverter(plus);
+        converter.convertToGray32();
+        FloatProcessor processor = (FloatProcessor) plus.getProcessor();
+        return floatProcessorToImage(processor, title);
+    }
+
+    public static mt.Image floatProcessorToImage(FloatProcessor processor, String title) {
+        Image image = new mt.Image(processor.getWidth(), processor.getHeight(), title);
+        image.setBuffer((float[]) processor.getPixels());
+        return image;
+    }
+
+    public static mt.Image openImageFromInternet(String url, String fileType) {
+        if (new File(url).exists()) {
+            return openImage(url);
+        }
+        try {
+            Path tempFile = Files.createTempFile("mt2", fileType);
+            ReadableByteChannel readableByteChannel = Channels.newChannel(new URL(url).openStream());
+            FileOutputStream fileOutputStream = new FileOutputStream(tempFile.toFile());
+            fileOutputStream.getChannel()
+                    .transferFrom(readableByteChannel, 0, Long.MAX_VALUE);
+
+            ImagePlus plus = ij.IJ.openImage(tempFile.toString());
+            return plusToImage(plus, tempFile.toFile().getName());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    public static mt.Image openImage(String path) {
+        ImagePlus plus = ij.IJ.openImage(path);
+        return plusToImage(plus, (new File(path)).getName());
+    }
 }
 
 
