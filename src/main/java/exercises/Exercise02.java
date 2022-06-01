@@ -4,10 +4,9 @@
  *
  * Distributed under terms of the GPLv3 license.
  */
+// Erik Goesche ge76imih
 package exercises;
 
-import mt.LinearFilter;
-import mt.Signal;
 import org.json.JSONException;
 import org.json.JSONObject;
 import java.io.BufferedReader;
@@ -41,7 +40,8 @@ public class Exercise02 {
 	}
 
 
-	// Erik Goesche ge76imih
+	// <your name> <your idm>
+	// <your partner's name> <your partner's idm> (if you submit with a group partner)
 	public static void main(String[] args) throws MalformedURLException, IOException {
 		var response = readJsonFromUrl("https://api.corona-zahlen.org/germany/history/cases");
 		var data = response.getJSONArray("data");
@@ -55,13 +55,24 @@ public class Exercise02 {
 				"Data provided by Robert-Koch-Institut via " + response.getJSONObject("meta").getString("info"));
 		System.out.println("Data from " + data.getJSONObject(0).getString("date") + " to "
 				+ data.getJSONObject(data.length() - 1).getString("date"));
+		var signal = new mt.Signal(cases, "Cases");
+		signal.show();
 
-		// TODO: Initialize an object from the class signal and play around with it by applying some filters to it
-		Signal caseSignal = new Signal(cases, "Cases for each day");
-		caseSignal.show();
-		float[] kernel = {1.0f/7.0f, 1.0f/7.0f, 1.0f/7.0f, 1.0f/7.0f, 1.0f/7.0f, 1.0f/7.0f, 1.0f/7.0f};
-		LinearFilter filter = new LinearFilter(kernel, "Filter");
-		Signal flattenCaseSignal = filter.apply(caseSignal);
-		flattenCaseSignal.show();
+		var filterMean = new mt.LinearFilter(
+				new float[] { 1.f / 7.f, 1.f / 7.f, 1.f / 7.f, 1.f / 7.f, 1.f / 7.f, 1.f / 7.f, 1.f / 7.f },
+				"Mean Week");
+		var filterDifference = new mt.LinearFilter(new float[] { 1.f, 0.f, 0.f, 0.f, 0.f, 0.f, -1.f },
+				"Difference Week");
+
+		var meanData = filterMean.apply(signal);
+		var diffData = filterDifference.apply(signal);
+		meanData.show();
+		diffData.show();
+
+		var combination1 = filterMean.apply(diffData);
+		var combination2 = filterDifference.apply(meanData);
+
+		combination1.show();
+		combination2.show();
 	}
 }

@@ -1,98 +1,107 @@
+
+/*
+ * Signal.java
+ * Copyright (C) 2020 Stephan Seitz <stephan.seitz@fau.de>
+ *
+ * Distributed under terms of the GPLv3 license.
+ */
 // Erik Goesche ge76imih
 package mt;
 
 import lme.DisplayUtils;
+import java.util.Random;
 
-import static java.lang.Math.abs;
 
 public class Signal {
-    protected float[] buffer;   // Array to store signal values
-    protected String name;  // Name of the signal
-    protected int minIndex; //Index of first array element (should be 0 for signals)
+	protected float[] buffer; //Array to store signal values
+	protected String name; //Name of the signal
+	protected int minIndex =  0 ;
 
-    // Create signal with a certain length (set values later)
-    public Signal(int length, String name) {
-        this.buffer = new float[length];
-        this.name = name;
-    }
+	public Signal(int length, String name) {
+		buffer = new float[length];
+		this.name = name;
+	}
 
-    // Create a signal from a provided array
-    public Signal(float[] buffer, String name) {
-        this.buffer = buffer;
-        this.name = name;
-    }
+	public Signal(float[] buffer, String name) {
+		this.buffer = buffer;
+		this.name = name;
+	}
 
-    // Size of the signal
-    public int size() {
-        return this.buffer.length;
-    }
+	public void show() {
+		DisplayUtils.showArray(buffer, name, /*start index =*/0, /*distace between values=*/1);
+	}
 
-    // Get the internal array
-    public float[] buffer() {
-        return this.buffer;
-    }
+	public int size() {
+		return buffer.length;
+	}
 
-    // Get the name of the signal
-    public String name() {
-        return this.name;
-    }
+	public float[] buffer() {
+		return buffer;
+	}
 
-    // Visualize the signal
-    public void show() {
-        DisplayUtils.showArray(this.buffer, this.name, /*start index=*/0, /*distance between values=*/1);
-    }
+	public String name() {
+		return name;
+	}
+	
+	public int minIndex(){ return minIndex;}
 
-    // Adds the signal with another one element-wise
-    // Checks if both signals have the same size otherwise throws an error
-    public Signal plus(Signal other) {
-        if (this.size() != other.size()) {
-            throw new ArithmeticException("Signal have not the same size");
-        }
-        float[] newbuffer = new float[this.size()];
-        for (int i = 0; i < this.size(); i++) {
-            newbuffer[i] = this.buffer()[i] + other.buffer()[i];
-        }
+	public int maxIndex(){
+		this.minIndex();
+		int maxIndex = this.minIndex() + this.size()-1;
+		return  maxIndex;
+	}
 
-        return new Signal(newbuffer, this.name() + " + " + other.name());
-    }
+	public float atIndex(int i) {
+		int arrayIdx = i - this.minIndex;
+		if (arrayIdx < 0 || arrayIdx >= buffer.length) {
+			return 0.f;
+		} else {
+			return buffer[arrayIdx];
+		}
+	}
 
-    // Multiplies the signal with a scalar
-    public Signal times(float scalar) {
-        float[] newbuffer = new float[this.size()];
-        for (int i = 0; i < this.size(); i++) {
-            newbuffer[i] = this.buffer()[i] * scalar;
-        }
+	public void setAtIndex(int i, float value){
+		int arrayIdx = i - this.minIndex();
+		buffer[arrayIdx] = value;
+	}
 
-        return new Signal(newbuffer, this.name() + " * " + scalar);
-    }
+	public Signal plus(Signal other) {
+		if (size() != other.size()) {
+			throw new RuntimeException("Java sucks: both Signals don't have the same size!");
+		}
+		Signal result = new Signal(this.size(), name() + " + " + other.name());
+		for (int i = 0; i < result.size(); i++) {
+			result.buffer()[i] = buffer()[i] + other.buffer()[i];
+		}
+		return result;
+	}
 
-    // Get the lowest index of signal (that is stored in buffer)
-    public int minIndex() {
-        return this.minIndex;
-    }
+	public Signal times(float scalar) {
+		Signal result = new Signal(this.size(), scalar + "*" + name());
+		for (int i = 0; i < result.size(); i++) {
+			result.buffer()[i] = buffer()[i] * scalar;
+		}
+		return result;
+	}
+	
+	public float sum() {
+		float rtn = 0;
+		for (float f : buffer) {
+			rtn += f;
+		}
+		return rtn;
+	}
 
-    // Get the highest index of signal (that is stored in buffer)
-    public int maxIndex() {
-        return this.minIndex + this.buffer.length - 1;
-    }
+	public float max() {
+		float max = Float.NEGATIVE_INFINITY;
+		for (float f : buffer) {
+			max = Math.max(f, max);
+		}
+		return max;
+	}
 
-    // Get signal at index i
-    public float atIndex(int i) {
-        try {
-            return this.buffer[i + abs(this.minIndex)];
-        } catch (ArrayIndexOutOfBoundsException e) {
-            return 0.0f;
-        }
-    }
+	public void setName(String name){
+		this.name = name;
+	}
 
-    // Set signal at index i
-    public void setAtIndex(int i, float value) {
-        this.buffer[i + abs(this.minIndex)] = value;
-    }
-
-    public static void main(String[] args) {
-        float numbers[] = {42, 25, 17, 63, 90};
-        Signal s1 = new Signal(numbers, "Signal 1");
-        s1.show();
-    }
 }

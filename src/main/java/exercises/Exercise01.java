@@ -1,11 +1,11 @@
-// Erik Goesche ge76imih
-// Mohammed Sabiya Sujith Ahamed cu01zaze
+
 /*
  * Exercise01.java
  * Copyright (C) 2020 Stephan Seitz <stephan.seitz@fau.de>
  *
  * Distributed under terms of the GPLv3 license.
  */
+// Erik Goesche ge76imih
 package exercises;
 
 
@@ -13,26 +13,16 @@ public class Exercise01 {
 	public static void main(String[] args) {
 		(new ij.ImageJ()).exitWhenQuitting(true);
 
-		// float f[] = {10.10f,30.3f,40.60f,77.50f};
+		float[] test = new float[]{1, 3, 5, 7};
+		var signal = new mt.Signal(test, "testsignl");
+		signal.show();
+		mt.CosineWave cos = new mt.CosineWave(1, 1024);
+		var sin = new mt.SineWave(1, 1024);
 
-		// var signal = new mt.Signal(f, "Signal");
-		// var cos = new mt.CosineWave(100, 1);
-		// var sin = new mt.SineWave(100, 3);
+		cos.show();
+		sin.show();
 
-		// signal.show();
-		// cos.show();
-		// sin.show();
-
-		var sigsaw = new mt.SineWave(100, 1).times(1.0f/2.0f)
-				.plus(new mt.SineWave(100, 3)).times(2.0f/3.0f)
-				.plus(new mt.SineWave(100, 5)).times(2.0f/5.0f)
-				.plus(new mt.SineWave(100, 7)).times(2.0f/7.0f)
-				;
-		sigsaw.show();
-
-		/*
 		var numWaves = 3;
-		//TODO try to understand the code and play around with it! 
 
 		var coolWave = new mt.SineWave(1 * numWaves, 1024)
 			.plus(new mt.SineWave(2 * numWaves, 1024).times(-1.0f/2.0f))
@@ -46,8 +36,6 @@ public class Exercise01 {
 			;
 
 		coolWave.show();
-
-		 */
 
 	}
 }
