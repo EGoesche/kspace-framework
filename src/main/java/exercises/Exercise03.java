@@ -17,10 +17,10 @@ public class Exercise03 {
 
 		Image image = lme.DisplayUtils.openImageFromInternet("https://mt2-erlangen.github.io/pacemaker.png", ".png");
 		image.show();
-		//image.fft();
+		image.fft();
 
 		// TODO: Create Cosine wave and compute fft
-		// TODO: Generate checkboard patterns
+		// TODO: Generate checkboard patterns	kx -5, ky -5 + kx 5, ky -5 (corners)
 
 	}
 }

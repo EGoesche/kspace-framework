@@ -18,6 +18,8 @@ public class Image extends Signal {
     // Create an image with given dimensions
     public Image(int width, int height, String name) {
         super(width * height, name);
+        this.width = width;
+        this.height = height;
     }
 
     // Create an image with given dimensions and also provide the content
@@ -27,6 +29,8 @@ public class Image extends Signal {
             throw new IllegalArgumentException("Given width and height does not fit the dimensions of the given " +
                     "pixels array.");
         }
+        this.width = width;
+        this.height = height;
     }
 
     // Image dimensions
@@ -63,6 +67,21 @@ public class Image extends Signal {
 
     public void show() {
         DisplayUtils.showImage(buffer, name, width(), origin, /*spacing()*/ 1.0f, /*Replace window with same name*/true);
+    }
+
+    public Image add(Image image) {
+        if(this.width != image.width || this.height != image.height) {
+            throw new IllegalArgumentException("Given images differ in size.");
+        }
+        Image result = new Image(this.width, this.height, this.name + " + " + image.name);
+        for(int i = 0; i <= this.width * this.height; i++) {
+            result.buffer[i] = this.buffer[i] + image.buffer[i];
+        }
+        return result;
+    }
+
+    public void fft(){
+        DisplayUtils.FFT(buffer, name, width(), origin, /*spacing()*/ 1.0f);
     }
 
 
