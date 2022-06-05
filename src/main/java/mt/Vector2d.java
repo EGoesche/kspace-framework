@@ -1,3 +1,4 @@
+// Erik Goesche ge76imih
 package mt;
 
 public class Vector2d {

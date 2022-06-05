@@ -27,9 +27,9 @@ public class Exercise03 {
 		// wave.show();
 		// wave.fft();
 
-		// TODO: Generate checkboard patterns	kx -5, ky -5 + kx 5, ky -5 (corners)
-		var checkerboard = new CosineWave2d(new Vector2d(-5, -5), 500, 500, "c1")
-				.add(new CosineWave2d(new Vector2d(5, -5), 500, 500, "c2"));
+		// TODO: Generate checkboard patterns
+		var checkerboard = new CosineWave2d(new Vector2d(-30, -30), 500, 500, "c1")
+				.add(new CosineWave2d(new Vector2d(30, -30), 500, 500, "c2"));
 		checkerboard.show();
 	}
 }

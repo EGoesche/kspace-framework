@@ -1,3 +1,4 @@
+// Erik Goesche ge76imih
 package mt;
 
 public class CosineWave2d extends Image {
