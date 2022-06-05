@@ -74,7 +74,7 @@ public class Image extends Signal {
             throw new IllegalArgumentException("Given images differ in size.");
         }
         Image result = new Image(this.width, this.height, this.name + " + " + image.name);
-        for(int i = 0; i <= this.width * this.height; i++) {
+        for(int i = 0; i < this.width * this.height; i++) {
             result.buffer[i] = this.buffer[i] + image.buffer[i];
         }
         return result;

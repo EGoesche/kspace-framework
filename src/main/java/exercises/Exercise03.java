@@ -8,7 +8,10 @@
 
 package exercises;
 
+import mt.CosineWave;
+import mt.CosineWave2d;
 import mt.Image;
+import mt.Vector2d;
 //import mt.Vector2d;
 
 public class Exercise03 {
@@ -16,11 +19,17 @@ public class Exercise03 {
 		(new ij.ImageJ()).exitWhenQuitting(true);
 
 		Image image = lme.DisplayUtils.openImageFromInternet("https://mt2-erlangen.github.io/pacemaker.png", ".png");
-		image.show();
-		image.fft();
+		// image.show();
+		// image.fft();
 
 		// TODO: Create Cosine wave and compute fft
-		// TODO: Generate checkboard patterns	kx -5, ky -5 + kx 5, ky -5 (corners)
+		CosineWave2d wave = new CosineWave2d(new Vector2d(1, 1), 500, 500, "wave");
+		// wave.show();
+		// wave.fft();
 
+		// TODO: Generate checkboard patterns	kx -5, ky -5 + kx 5, ky -5 (corners)
+		var checkerboard = new CosineWave2d(new Vector2d(-5, -5), 500, 500, "c1")
+				.add(new CosineWave2d(new Vector2d(5, -5), 500, 500, "c2"));
+		checkerboard.show();
 	}
 }
