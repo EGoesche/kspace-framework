@@ -4,7 +4,6 @@
  *
  * Distributed under terms of the GPLv3 license.
  */
-// Erik Goesche ge76imih
 package mt;
 
 public class LinearFilter extends Signal {
