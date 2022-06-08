@@ -1,88 +1,112 @@
-// Erik Goesche ge76imih
+/*
+ * Image.java
+ * Copyright (C) 2020 Stephan Seitz <stephan.seitz@fau.de>
+ *
+ * Distributed under terms of the GPLv3 license.
+ */
+
 package mt;
 
 import lme.DisplayUtils;
+import mt.Signal;
 
 public class Image extends Signal {
-    // Dimensions of the image
+
     protected int width;
     protected int height;
+    protected int minIndexX = 0;
+    protected int minIndexY = 0;
 
-    // Same as Signal.minIndex but for X and Y dimension
-    protected int minIndexX;
-    protected int minIndexY;
-
-    // For a later exercise (no need to do anything with it in exercise 3)
     protected float[] origin = new float[]{ 0, 0 };
 
-    // Create an image with given dimensions
     public Image(int width, int height, String name) {
-        super(width * height, name);
+        super(height * width, name);
         this.width = width;
         this.height = height;
     }
 
-    // Create an image with given dimensions and also provide the content
     public Image(int width, int height, String name, float[] pixels) {
         super(pixels, name);
-        if(pixels.length != width * height) {
-            throw new IllegalArgumentException("Given width and height does not fit the dimensions of the given " +
-                    "pixels array.");
-        }
         this.width = width;
         this.height = height;
-    }
-
-    // Image dimensions
-    public int width() { return this.width; }
-    public int height() { return this.height; }
-
-    // Minimum and maximum indices (should work like Signal.minIndex/maxIndex)
-    public int minIndexX() { return this.minIndexX; }
-    public int minIndexY() { return this.minIndexY; }
-
-    public int maxIndexX() {
-        return this.minIndexX + this.width - 1;
-    }
-    public int maxIndexY() {
-        return this.minIndexY + this.height - 1;
-    }
-
-    public float atIndex(int x, int y) {
-        try {
-            return this.buffer[(y - this.minIndexY) * this.width + (x - this.minIndexX)];
-        } catch (ArrayIndexOutOfBoundsException e) {
-        return 0.0f;
-    }
-
-    }
-    public void setAtIndex(int x, int y, float value) {
-        buffer[(y - this.minIndexY) * this.width + (x - this.minIndexX)] = value;
-    }
-
-    //We need a method to fill the buffer for the openImage() function
-    public void setBuffer(float[] buffer) {
-        this.buffer = buffer;
     }
 
     public void show() {
         DisplayUtils.showImage(buffer, name, width(), origin, /*spacing()*/ 1.0f, /*Replace window with same name*/true);
     }
+    public int width() {
+        return width;
+    }
 
-    public Image add(Image image) {
-        if(this.width != image.width || this.height != image.height) {
-            throw new IllegalArgumentException("Given images differ in size.");
+    public int height() {
+        return height;
+    }
+
+    public float atIndex(int x, int y) {
+        int xIdx = x - minIndexX;
+        int yIdx = y - minIndexY;
+
+        if (xIdx < 0 || xIdx >= width() || yIdx < 0 || yIdx >= height()) {
+            return 0.f;
+        } else {
+            return buffer[yIdx * width() + xIdx];
         }
-        Image result = new Image(this.width, this.height, this.name + " + " + image.name);
-        for(int i = 0; i < this.width * this.height; i++) {
-            result.buffer[i] = this.buffer[i] + image.buffer[i];
+    }
+
+    public void setAtIndex(int x, int y, float value) {
+        int xIdx = x - minIndexX;
+        int yIdx = y - minIndexY;
+
+        if (xIdx < 0 || xIdx >= width() || yIdx < 0 || yIdx >= height()) {
+            throw new RuntimeException("Index out of bounds");
+        } else {
+            buffer[yIdx * width() + xIdx] = value;
         }
-        return result;
+    }
+
+
+    public void setBuffer(float[] buffer) {
+        this.buffer = buffer;
+    }
+
+
+    public int minIndexX() {
+        return minIndexX;
+    }
+
+    public int minIndexY() {
+        return minIndexY;
+    }
+
+    public int maxIndexX() {
+        return minIndexX + width() - 1;
+    }
+
+    public int maxIndexY() {
+        return minIndexY + height() - 1;
     }
 
     public void fft(){
         DisplayUtils.FFT(buffer, name, width(), origin, /*spacing()*/ 1.0f);
     }
 
+
+    public Image add(Image image){
+        Image result = new Image(width,height, name() + " + " + image.name());
+        result.minIndexX = minIndexX;
+        result.minIndexY = minIndexY;
+
+        if(image.width != width || image.height != height){
+            throw new RuntimeException("Images need to have the same size!");
+        }
+        for (int y = minIndexY; y < minIndexY + height(); ++y) {
+            for (int x = minIndexX; x < minIndexX + width(); ++x) {
+                float plus = image.atIndex(x,y) + atIndex(x,y);
+                result.setAtIndex(x,y,plus);
+
+            }
+        }
+        return result;
+    }
 
 }
