@@ -104,4 +104,11 @@ public class Signal {
 		this.name = name;
 	}
 
+	public void addNoise(float mean, float standardDeviation) {
+		Random rand = new Random();
+		for (int i = 0; i < buffer.length; i++) {
+			buffer[i] += mean + rand.nextGaussian() * standardDeviation;
+		}
+	}
+
 }
