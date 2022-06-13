@@ -1,14 +1,20 @@
-// Erik Goesche ge76imih
+/*
+ * GaussFilter2d.java
+ * Copyright (C) 2020 Stephan Seitz <stephan.seitz@fau.de>
+ *
+ * Distributed under terms of the GPLv3 license.
+ */
 package mt;
+
 
 public class AverageFilter2d extends LinearImageFilter {
 
-    public AverageFilter2d(int filterSize) {
-        super(filterSize / 2, filterSize / 2, "Average Filter");
-        for (int x = minIndexX; x <= maxIndexX(); x++) {
-            for (int y = minIndexY; y <= maxIndexY(); y++) {
-                this.setAtIndex(x, y, 1.0f / (filterSize * filterSize));
-            }
+    public AverageFilter2d(int filtersize) {
+        super(filtersize, filtersize, "AverageFilter");
+
+        for (int i = 0; i < buffer.length; i++){
+            buffer[i] = (float) 1/(filtersize*filtersize);
         }
+
     }
 }

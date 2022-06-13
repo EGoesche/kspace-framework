@@ -1,19 +1,23 @@
-// Erik Goesche ge76imih
+/*
+ * GaussFilter2d.java
+ * Copyright (C) 2020 Stephan Seitz <stephan.seitz@fau.de>
+ *
+ * Distributed under terms of the GPLv3 license.
+ */
 package mt;
 
 public class GaussFilter2d extends LinearImageFilter {
-
     public GaussFilter2d(int filterSize, float sigma) {
-        super(filterSize / 2, filterSize / 2, "Gauss Filter");
+        /// 1 P für super call und normalize
+        super(filterSize, filterSize, "Gauss2d (" + filterSize + ", " + sigma + ")");
+        /// 1 P für Formel richtig angewandt
+        for (int y = minIndexY; y < minIndexY + height(); ++y) {
+            for (int x = minIndexX; x < minIndexX + width(); ++x) {
+                setAtIndex(x, y, (float) (1.f / (2 * Math.PI * sigma * sigma)
+                        * Math.exp(-(x * x + y * y) / (2.f * sigma * sigma))));
 
-        for(int x = this.minIndexX; x <= this.maxIndexX(); x++) {
-            for(int y = this.minIndexY; y <= this.maxIndexY(); y++) {
-                float coef = (float) (1 / (2 * Math.PI * Math.pow(sigma, 2)) *
-                        Math.exp(- (Math.pow(x, 2) + Math.pow(y, 2)) / (2 * Math.pow(sigma, 2))));
-                this.setAtIndex(x, y, coef);
             }
         }
-        normalize();    // ensure that all coefficients sum up to one
+        normalize();
     }
 }
-    

@@ -1,18 +1,20 @@
-// Erik Goesche ge76imih
+/*
+ * GaussFilter2d.java
+ * Copyright (C) 2020 Stephan Seitz <stephan.seitz@fau.de>
+ *
+ * Distributed under terms of the GPLv3 license.
+ */
 package mt;
 
 public class SharpeningFilter2d extends LinearImageFilter {
 
     public SharpeningFilter2d(float focus) {
-        super(3, 3, "Sharpening Filter");
-        for (int x = minIndexX; x <= maxIndexX(); x++) {
-            for (int y = minIndexY; y <= maxIndexY(); y++) {
-                if (x == 0 && y == 0) {
-                    setAtIndex(x, y, focus);
-                    continue;
-                }
-                setAtIndex(x, y, - (focus - 1.0f) / 8);
-            }
+        super(3, 3, "SharpeningFilter");
+
+        for (int i = 0; i < buffer.length; i++){
+            buffer[i] = - (focus-1)/8;
         }
+        setAtIndex(0,0,focus);
+
     }
 }
