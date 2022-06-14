@@ -8,10 +8,18 @@ package mt;
 
 public class ImageTransformer implements ImageFilter {
 
-    //TODO
+    // Transformation parameters
+    public float shiftX; // tx
+    public float shiftY; // ty
+    public float rotation; // theta
+    public float scale; // s
     
     @Override
     public String name() {
         return "Image Transformer";
+    }
+
+    public void apply(Image input, Image output) {
+        
     }
 }

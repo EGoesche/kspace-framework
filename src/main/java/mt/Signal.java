@@ -16,6 +16,7 @@ public class Signal {
 	protected float[] buffer; //Array to store signal values
 	protected String name; //Name of the signal
 	protected int minIndex =  0 ;
+	protected float spacing = 1.0f;
 
 	public Signal(int length, String name) {
 		buffer = new float[length];
@@ -28,7 +29,7 @@ public class Signal {
 	}
 
 	public void show() {
-		DisplayUtils.showArray(buffer, name, /*start index =*/0, /*distace between values=*/1);
+		DisplayUtils.showArray(buffer, name, /*start index =*/0, spacing);
 	}
 
 	public int size() {
@@ -49,6 +50,13 @@ public class Signal {
 		this.minIndex();
 		int maxIndex = this.minIndex() + this.size()-1;
 		return  maxIndex;
+	}
+
+	public void setSpacing(float spacing) {
+		this.spacing = spacing;
+	}
+	public float spacing() {
+		return this.spacing;
 	}
 
 	public float atIndex(int i) {
